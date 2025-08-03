@@ -37,10 +37,18 @@ dependencies:
   flutter_svg: ^2.2.0
   animated_toggle_switch: ^0.8.5
   flutter_animate: ^4.5.2
+  flutter_launcher_icons: ^0.14.4
+  toggle_switch: ^2.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/Logo.png"
+  min_sdk_android: 16 # android min sdk min:16, default 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
