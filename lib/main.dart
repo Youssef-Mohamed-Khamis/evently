@@ -1,3 +1,5 @@
+import 'package:evently/ui/home/screen/home_screen.dart';
+import 'package:evently/ui/onBoarding/screen/onBoarding_screen.dart';
 import 'package:evently/ui/splash/screen/splash_screen.dart';
 import 'package:evently/ui/start/screen/start_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,9 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.routeName,
       routes: {
         SplashScreen.routeName:(_)=>SplashScreen(),
+        OnboardingScreen.routeName:(_)=>OnboardingScreen(),
         StartScreen.routeName:(_)=>StartScreen(),
+        HomeScreen.routeName:(_)=>HomeScreen(),
       },
     );
   }

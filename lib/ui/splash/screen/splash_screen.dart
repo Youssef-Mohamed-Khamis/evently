@@ -3,6 +3,7 @@ import 'package:evently/core/resources/ColorManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../onBoarding/screen/onBoarding_screen.dart';
 import '../../start/screen/start_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class SplashScreen extends StatelessWidget {
       body: Center(child: Image.asset(AssetsManager.logo))
           .animate(
         onComplete: (controller) {
-          Navigator.pushReplacementNamed(context, StartScreen.routeName);
+          Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
         },
       )
           .scale(duration: Duration(seconds: 2))

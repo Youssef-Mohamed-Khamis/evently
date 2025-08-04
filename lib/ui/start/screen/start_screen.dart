@@ -1,4 +1,3 @@
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:evently/core/resources/ColorManager.dart';
 import 'package:evently/core/resources/StringsManager.dart';
 import 'package:evently/core/reusable_components/CustomButton.dart';
