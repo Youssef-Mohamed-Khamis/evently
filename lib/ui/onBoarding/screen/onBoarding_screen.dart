@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/core/resources/ColorManager.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -24,6 +25,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     bool isLastPage = currentIndex == 2;
     bool isFirstPage = currentIndex == 0;
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -33,12 +37,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           height: 50,
           fit: BoxFit.fitHeight,
         ),
+        iconTheme: IconThemeData(color: theme.iconTheme.color),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 50),
+            padding:  EdgeInsets.only(top: 50),
             child: PageView(
               controller: _controller,
               onPageChanged: (index) {
@@ -47,24 +52,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 OnboardPage(
                   image: AssetsManager.boardOne,
-                  title: StringsManager.boardOneTitle,
-                  description: StringsManager.boardOneDesc,
+                  title: 'boardOneTitle'.tr(),
+                  description: 'boardOneDesc'.tr(),
                 ),
                 OnboardPage(
                   image: AssetsManager.boardTwo,
-                  title: StringsManager.boardTwoTitle,
-                  description: StringsManager.boardTwoDesc,
+                  title: 'boardTwoTitle'.tr(),
+                  description: 'boardTwoDesc'.tr(),
                 ),
                 OnboardPage(
                   image: AssetsManager.boardThree,
-                  title: StringsManager.boardThreeTitle,
-                  description: StringsManager.boardThreeDesc,
+                  title: 'boardThreeTitle'.tr(),
+                  description: 'boardThreeDesc'.tr(),
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 48),
+          const SizedBox(height: 48),
 
           Positioned(
             bottom: 20,
@@ -76,27 +81,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 if (!isFirstPage)
                   Padding(
-                    padding:  EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 20),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      color: ColorManager.primaryColor,
+                      icon: const Icon(Icons.arrow_back),
+                      color: theme.primaryColor,
                       iconSize: 30,
                       onPressed: () {
                         _controller.previousPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.ease,
                         );
                       },
                     ),
                   )
                 else
-                   SizedBox(width: 48),
+                  const SizedBox(width: 48),
 
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 3,
                   effect: WormEffect(
-                    activeDotColor: ColorManager.primaryColor,
+                    activeDotColor: theme.primaryColor,
+                    dotColor: isDark ? Colors.grey : Colors.black26,
                     dotHeight: 10,
                     dotWidth: 10,
                   ),
@@ -105,17 +111,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: IconButton(
-                    icon: Icon(
-                        Icons.arrow_forward,
-                    ),
-                    color: ColorManager.primaryColor,
+                    icon: const Icon(Icons.arrow_forward),
+                    color: theme.primaryColor,
                     iconSize: 30,
                     onPressed: () {
                       if (isLastPage) {
-                        Navigator.pushReplacementNamed(context, StartScreen.routeName);
+                        Navigator.pushNamed(
+                            context, StartScreen.routeName);
                       } else {
                         _controller.nextPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.ease,
                         );
                       }

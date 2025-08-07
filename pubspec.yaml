@@ -40,6 +40,9 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   toggle_switch: ^2.3.0
   smooth_page_indicator: ^1.2.1
+  shared_preferences: ^2.5.3
+  easy_localization: ^3.0.8
+  provider: ^6.1.5
 
 dev_dependencies:
   flutter_test:

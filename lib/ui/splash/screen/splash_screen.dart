@@ -2,9 +2,7 @@ import 'package:evently/core/resources/AssetsManager.dart';
 import 'package:evently/core/resources/ColorManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../onBoarding/screen/onBoarding_screen.dart';
-import '../../start/screen/start_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = 'splash';

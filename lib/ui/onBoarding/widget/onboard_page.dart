@@ -36,12 +36,7 @@ class OnboardPage extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 20,
-              color: ColorManager.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+            style: Theme.of(context).textTheme.titleSmall,),
 
            SizedBox(height: 20),
 
@@ -50,13 +45,9 @@ class OnboardPage extends StatelessWidget {
             child: Text(
               description,
               textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 16,
-                color: ColorManager.blackColor,
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,),
             ),
-          ),
+
         ],
       ),
     );
