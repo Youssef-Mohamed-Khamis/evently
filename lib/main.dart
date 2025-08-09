@@ -6,7 +6,8 @@ import 'package:evently/ui/onBoarding/screen/onBoarding_screen.dart';
 import 'package:evently/ui/register/screen/register_screen.dart';
 import 'package:evently/ui/splash/screen/splash_screen.dart';
 import 'package:evently/ui/start/screen/start_screen.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'ThemeProvider.dart';
@@ -17,6 +18,9 @@ void main() async{
   await PrefsManager.init();
   await EasyLocalization.ensureInitialized();
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(ChangeNotifierProvider(
       create: (context) => ThemeProvider()..initTheme(),
       child: EasyLocalization(

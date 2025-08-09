@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently/core/DialogUtils.dart';
 import 'package:evently/ui/login/screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -133,6 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     child: CustomButton(title: "register".tr(), onClick: (){
                       if(formKey.currentState!.validate()){
+                        createAccount();
                         // create new account
                       }
                     }),
@@ -186,6 +189,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+  createAccount()async{
+    try{
+      DialogUtils.showLoadingDialog(context);
+      var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text
+      );
+      Navigator.pop(context);
+    }on FirebaseAuthException catch(e){
+      Navigator.pop(context);
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    }catch(e){
+      print(e.toString());
+    }
+
   }
 
 }

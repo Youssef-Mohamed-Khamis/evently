@@ -1,8 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:evently/ui/home/screen/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../ThemeProvider.dart';
 import '../../../core/resources/AssetsManager.dart';
@@ -11,6 +16,8 @@ import '../../../core/resources/constants.dart';
 import '../../../core/reusable_components/CustomButton.dart';
 import '../../../core/reusable_components/CustomField.dart';
 import '../../../core/reusable_components/CustomSwitch.dart';
+import '../../../model/user_model.dart';
+import '../../../services/google_auth.dart';
 import '../../forget_password/screen/forget_password_screen.dart';
 import '../../register/screen/register_screen.dart';
 
@@ -119,12 +126,50 @@ class _LoginScreenState extends State<LoginScreen> {
                       title: "login".tr(),
                       onClick: () {
                         if (formKey.currentState!.validate()) {
-                          // لو الفورم صح
                           print("Form is valid");
                         }
                       },
                     ),
                   ),
+                  const SizedBox(height: 16),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      icon: Image.asset(
+                        'assets/images/google.jpeg',
+                        height: 24,
+                        width: 24,
+                      ),
+                      label: Text(
+                        context.locale.languageCode == "ar"
+                            ? "تسجيل الدخول  Google"
+                            : "Sign in with Google",
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontSize: 16,
+                        ),
+                      ),
+                      onPressed: () async {
+                        final firebaseServices = FirebaseServices();
+                        final user = await firebaseServices.signInWithGoogle();
+                        if (user != null) {
+                          print("تم تسجيل الدخول: ${user.name}");
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        } else {
+                          print("فشل تسجيل الدخول");
+                        }                      },
+                    ),
+                  ),
+
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -186,4 +231,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+
 }

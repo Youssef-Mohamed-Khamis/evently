@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently/core/resources/ColorManager.dart';
 import 'package:flutter/material.dart';
 
 class DialogUtils{
   static showLoadingDialog(BuildContext context){
     showDialog(context: context, builder: (context) => AlertDialog(
+      backgroundColor: Colors.white,
         alignment: Alignment.center,
       content: Column(
         mainAxisSize: MainAxisSize.min,
