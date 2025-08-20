@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../remote/local/PrefsManager.dart';
-// observable
-// publisher
-class ThemeProvider extends ChangeNotifier{
-  late ThemeMode themeMode;
 
-  initTheme(){
-    themeMode = ThemeMode.light;
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode themeMode = ThemeMode.light; // default
+
+  Future<void> initTheme() async {
+    final savedTheme = await PrefsManager.getThemeMode();
+    themeMode = savedTheme ?? ThemeMode.light;
+    notifyListeners();
   }
-  changeTheme(ThemeMode newTheme){
-    if(newTheme==themeMode) return;
+
+  void changeTheme(ThemeMode newTheme) {
+    if (newTheme == themeMode) return;
     themeMode = newTheme;
     PrefsManager.saveThemeMode(themeMode);
     notifyListeners();
   }
-
 }
+
