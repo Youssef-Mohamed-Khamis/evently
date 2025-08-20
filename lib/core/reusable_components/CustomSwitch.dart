@@ -1,5 +1,8 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../resources/AssetsManager.dart';
 import '../resources/ColorManager.dart';
 
 class CustomSwitch extends StatelessWidget {
@@ -23,7 +26,7 @@ class CustomSwitch extends StatelessWidget {
       style: ToggleStyle(
         indicatorColor: ColorManager.primaryColor,
         borderColor: ColorManager.primaryColor,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent
       ),
       iconList: icons,
     );

@@ -44,56 +44,54 @@ class _StartScreenState extends State<StartScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: Center(child: Image.asset(
-              themeProvider.themeMode==ThemeMode.dark
-                  ?AssetsManager.startDark
-                  :AssetsManager.startLight,fit: BoxFit.fitHeight,)
-            )
-            ),
-            SizedBox(height: 28,),
-            Text('startTitle'.tr(),style: TextStyle(
+              Expanded(child: Center(child: Image.asset(
+                themeProvider.themeMode==ThemeMode.dark
+                    ?AssetsManager.startDark
+                    :AssetsManager.startLight,fit: BoxFit.fitHeight,))),
+              SizedBox(height: 28,),
+              Text(StringsManager.startTitle.tr(),style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: ColorManager.primaryColor,
                 fontSize: 20
-            ),),
-            SizedBox(height: 28,),
-            Text('startDesc'.tr(),style: Theme.of(context).textTheme.bodySmall,),
-            SizedBox(height: 28,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('language'.tr(),style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              ),),
+              SizedBox(height: 28,),
+              Text(StringsManager.startDesc.tr(),style: Theme.of(context).textTheme.bodySmall,),
+              SizedBox(height: 28,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(StringsManager.language.tr(),style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w500
-                ),),
-                CustomSwitch(
-                    onChange: (value){
-                      setState(() {
-                        selectedLanguage = value;
-                      });
-                      if(selectedLanguage==1){
-                        context.setLocale(Locale("ar"));
-                      }else{
-                        context.setLocale(Locale("en"));
+                  ),),
+                  CustomSwitch(
+                      onChange: (value){
+                        setState(() {
+                          selectedLanguage = value;
+                        });
+                        if(selectedLanguage==1){
+                          context.setLocale(Locale("ar"));
+                        }else{
+                          context.setLocale(Locale("en"));
 
-                      }
-                    },
-                    icons:[
-                      SvgPicture.asset(AssetsManager.us,
-                        height: 30,
-                        width: 30,
-                      ),
-                      SvgPicture.asset(AssetsManager.eg, height: 30,
-                        width: 30,),
-                    ] ,
-                    current: selectedLanguage)
-              ],
-            ),
-            SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        }
+                      },
+                      icons:[
+                        SvgPicture.asset(AssetsManager.us,
+                          height: 30,
+                          width: 30,
+                        ),
+                        SvgPicture.asset(AssetsManager.eg, height: 30,
+                          width: 30,),
+                      ] ,
+                      current: selectedLanguage)
+                ],
+              ),
+              SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('theme'.tr(),style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500
+                Text(StringsManager.theme.tr(),style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w500
                 ),),
                 CustomSwitch(
                     onChange: (value){
@@ -125,17 +123,17 @@ class _StartScreenState extends State<StartScreen> {
                     current: selectedTheme)
               ],
             ),
-            SizedBox(height: 28,),
+              SizedBox(height: 28,),
 
             Container(
-              width: double.infinity,
-              child: CustomButton(
-                  title:'letsStart'.tr(),
-                  onClick: (){
+                width: double.infinity,
+                child: CustomButton(
+                  title:StringsManager.letsStart.tr(),
+                   onClick: (){
                     Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-                  }
+                   }
+                ),
               ),
-            ),
           ],
         ),
       ),

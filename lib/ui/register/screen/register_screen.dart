@@ -1,19 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:evently/core/DialogUtils.dart';
-import 'package:evently/ui/login/screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../ThemeProvider.dart';
+import '../../../core/DialogUtils.dart';
+import '../../../core/providers/ThemeProvider.dart';
+import '../../../core/remote/network/FirestoreManager.dart';
 import '../../../core/resources/AssetsManager.dart';
 import '../../../core/resources/StringsManager.dart';
 import '../../../core/resources/constants.dart';
 import '../../../core/reusable_components/CustomButton.dart';
 import '../../../core/reusable_components/CustomField.dart';
 import '../../../core/reusable_components/CustomSwitch.dart';
+import '../../../model/User.dart' as MyUser;
 import '../../forget_password/screen/forget_password_screen.dart';
+import '../../home/screen/home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = "register";
@@ -61,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding:  EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -70,22 +72,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Image.asset(AssetsManager.logo),
                   SizedBox(height: 24,),
                   CustomField(
-                    keyboard: TextInputType.name,
-                    hint: "name".tr(),
-                    prefix: AssetsManager.person,
-                    controller: nameController,
-                    validation: (value) {
-                      if(value == null || value.isEmpty){
-                        return "shouldEmpty".tr();
-                      }
-                      return null;
-                    },
+                      keyboard: TextInputType.name,
+                      hint: "name".tr(),
+                      prefix: AssetsManager.person,
+                      controller: nameController,
+                      validation: (value) {
+                        if(value == null || value.isEmpty){
+                          return "shouldEmpty".tr();
+                        }
+                        return null;
+                      },
                   ),
                   SizedBox(height: 16,),
                   CustomField(
                     keyboard: TextInputType.emailAddress,
                     controller: emailController,
-                    hint: 'email'.tr(),
+                    hint: StringsManager.email.tr(),
                     prefix: AssetsManager.email,
                     validation: (value){
                       if(value == null || value.isEmpty){
@@ -101,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomField(
                     keyboard: TextInputType.visiblePassword,
                     controller: passwordController,
-                    hint: 'password'.tr(),
+                    hint: StringsManager.password.tr(),
                     prefix: AssetsManager.lock,
                     isPassword: true,
                     validation: (value) {
@@ -111,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if(value.length<8){
                         return "password mustn't be less than 8 char";
                       }
-
+              
                     },
                   ),
                   SizedBox(height: 16,),
@@ -126,8 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return "Must be same";
                       }
                       return null;
-
-
+              
+              
                     },
                   ),
                   SizedBox(height: 16,),
@@ -135,8 +137,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     child: CustomButton(title: "register".tr(), onClick: (){
                       if(formKey.currentState!.validate()){
-                        createAccount();
                         // create new account
+                        createAccount();
                       }
                     }),
                   ),
@@ -147,14 +149,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text("alreadyHaveAcc".tr(),style: Theme.of(context).textTheme.bodySmall,),
                       TextButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, LoginScreen.routeName);
+                            Navigator.pushNamed(context, RegisterScreen.routeName);
                           },
                           child: Text("login".tr(),
                             style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                 fontSize: 16,
                                 decorationColor: Theme.of(context).colorScheme.primary,
                                 decorationThickness: 2,
-
+              
                                 decoration: TextDecoration.underline
                             ),)),
                     ],
@@ -169,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           context.setLocale(Locale("ar"));
                         }else{
                           context.setLocale(Locale("en"));
-
+              
                         }
                       },
                       icons:[
@@ -181,7 +183,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: 30,),
                       ] ,
                       current: selectedLanguage)
-
+              
                 ],
               ),
             ),
@@ -190,25 +192,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
   createAccount()async{
     try{
       DialogUtils.showLoadingDialog(context);
       var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
+          email: emailController.text.trim(),
           password: passwordController.text
       );
+      await FirestoreManager.createUser(MyUser.User(
+        id: credential.user?.uid,
+        name: nameController.text,
+        email: emailController.text,
+        favorites: []
+      ));
       Navigator.pop(context);
-    }on FirebaseAuthException catch(e){
+      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+    }on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        DialogUtils.showMessageDialog(context, "passwordWeak".tr());
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        DialogUtils.showMessageDialog(context, "emailAlreadyExist".tr());
+      }else{
+        DialogUtils.showMessageDialog(context, e.toString());
       }
     }catch(e){
       print(e.toString());
+      DialogUtils.showMessageDialog(context, e.toString());
     }
-
   }
-
 }

@@ -1,5 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/DialogUtils.dart';
 import '../../../core/resources/AssetsManager.dart';
 import '../../../core/resources/StringsManager.dart';
 import '../../../core/resources/constants.dart';
@@ -47,7 +50,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               CustomField(
                 keyboard: TextInputType.emailAddress,
                 controller: emailController,
-                hint: 'email'.tr(),
+                hint: StringsManager.email.tr(),
                 prefix: AssetsManager.email,
                 validation: (value){
                   if(value == null || value.isEmpty){
@@ -64,6 +67,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               Container(
                 width: double.infinity  ,
                 child: CustomButton(title: "restPass".tr(), onClick: (){
+                    resetPassword();
                 }),
               )
             ],
@@ -73,4 +77,21 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     );
   }
 
+  resetPassword()async{
+    if(formKey.currentState!.validate()){
+      try{
+        DialogUtils.showLoadingDialog(context);
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: emailController.text.trim());
+        Navigator.pop(context);
+      }on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
+        print(e.code);
+        if (e.code == 'user-not-found') {
+          DialogUtils.showMessageDialog(context, "userNotFound".tr());
+        }
+      }
+    }
+
+  }
 }

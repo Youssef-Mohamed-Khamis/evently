@@ -3,12 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomField extends StatefulWidget {
   String hint;
-  String prefix;
+  String? prefix;
   TextEditingController controller;
   bool isPassword;
   String? Function(String?) validation;
   TextInputType keyboard;
-  CustomField({required this.keyboard,required this.hint,required this.prefix,required this.controller,this.isPassword = false,required this.validation});
+  int maxLines;
+  CustomField({this.maxLines = 1,required this.keyboard,required this.hint,this.prefix,required this.controller,this.isPassword = false,required this.validation});
 
   @override
   State<CustomField> createState() => _CustomFieldState();
@@ -20,6 +21,7 @@ class _CustomFieldState extends State<CustomField> {
   Widget build(BuildContext context) {
     // validation
     return TextFormField(
+      maxLines: widget.maxLines,
       keyboardType: widget.keyboard,
       validator:widget.validation ,
       controller:widget.controller,
@@ -71,11 +73,13 @@ class _CustomFieldState extends State<CustomField> {
           maxWidth: 60,
           maxHeight: 60,
         ),
-        prefixIcon: Padding(
+        prefixIcon: widget.prefix==null
+            ?null
+            :Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16
           ),
-          child: SvgPicture.asset(widget.prefix,
+          child: SvgPicture.asset(widget.prefix!,
             height: 36,
             width: 36,
             colorFilter: ColorFilter.mode(
