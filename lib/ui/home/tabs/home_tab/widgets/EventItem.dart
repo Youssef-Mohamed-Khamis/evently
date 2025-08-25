@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:evently/ui/event_details/screen/event_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,77 +26,82 @@ class _EventItemState extends State<EventItem> {
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProvider>(context);
     print(widget.event.id);
-    return Container(
-      padding: EdgeInsetsDirectional.all(8),
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-            image: AssetImage(getEventTypePath(widget.event.type!)),
-            fit: BoxFit.fitHeight
-        )
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: ColorManager.whiteColor,
-              borderRadius: BorderRadius.circular(8)
-            ),
-            child: Column(
-              children: [
-                Text(widget.event.date!.toDate().day.toString(),style: Theme.of(context).textTheme.titleSmall,),
-                Text(DateFormat.MMM().format(widget.event.date!.toDate()),style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontSize: 14
-                )),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 10
-            ),
-            decoration: BoxDecoration(
-              color: ColorManager.whiteColor,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(widget.event.title!,style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700
-                  ),),
-                ),
-               InkWell(
-                 onTap: ()async{
-                   if(widget.isLoveTab){
-                     List<String> favorites = provider.user?.favorites??[];
-                     await FirestoreManager.removeEventFavorite(FirebaseAuth.instance.currentUser!.uid, widget.event);
-                     print(widget.event.id!);
-                     favorites.remove(widget.event.id!);
-                     await FirestoreManager.updateUserFavorites(FirebaseAuth.instance.currentUser!.uid, favorites);
-                     print(provider.user?.favorites);
-
-                   }else{
-                     addOrRemoveFavorite(provider.user?.favorites??[]);
-                   }
-                 },
-                 child: SvgPicture.asset(provider.user?.favorites?.contains(widget.event.id!)??false
-                     ?"assets/images/heart_selected.svg"
-                   :"assets/images/heart.svg",
-
-                   colorFilter: ColorFilter.mode(
-                     Theme.of(context).colorScheme.primary, BlendMode.srcIn),),
-               )
-              ],
-            ),
+    return InkWell(
+      onTap: (){
+        Navigator.of(context).pushNamed(EventDetails.routeName,arguments: widget.event);
+      },
+      child: Container(
+        padding: EdgeInsetsDirectional.all(8),
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          image: DecorationImage(
+              image: AssetImage(getEventTypePath(widget.event.type!)),
+              fit: BoxFit.fitHeight
           )
-        ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: ColorManager.whiteColor,
+                borderRadius: BorderRadius.circular(8)
+              ),
+              child: Column(
+                children: [
+                  Text(widget.event.date!.toDate().day.toString(),style: Theme.of(context).textTheme.titleSmall,),
+                  Text(DateFormat.MMM().format(widget.event.date!.toDate()),style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontSize: 14
+                  )),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 10
+              ),
+              decoration: BoxDecoration(
+                color: ColorManager.whiteColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(widget.event.title!,style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                    ),),
+                  ),
+                 InkWell(
+                   onTap: ()async{
+                     if(widget.isLoveTab){
+                       List<String> favorites = provider.user?.favorites??[];
+                       await FirestoreManager.removeEventFavorite(FirebaseAuth.instance.currentUser!.uid, widget.event);
+                       print(widget.event.id!);
+                       favorites.remove(widget.event.id!);
+                       await FirestoreManager.updateUserFavorites(FirebaseAuth.instance.currentUser!.uid, favorites);
+                       print(provider.user?.favorites);
+
+                     }else{
+                       addOrRemoveFavorite(provider.user?.favorites??[]);
+                     }
+                   },
+                   child: SvgPicture.asset(provider.user?.favorites?.contains(widget.event.id!)??false
+                       ?"assets/images/heart_selected.svg"
+                     :"assets/images/heart.svg",
+
+                     colorFilter: ColorFilter.mode(
+                       Theme.of(context).colorScheme.primary, BlendMode.srcIn),),
+                 )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/ui/create_event/screen/CreateEventScreen.dart';
+import 'package:evently/ui/edit_event/screen/edit_event.dart';
+import 'package:evently/ui/event_details/screen/event_details.dart';
 import 'package:evently/ui/forget_password/screen/forget_password_screen.dart';
 import 'package:evently/ui/home/screen/home_screen.dart';
 import 'package:evently/ui/login/screen/login_screen.dart';
@@ -13,6 +15,7 @@ import 'core/providers/ThemeProvider.dart';
 import 'core/providers/UserProvider.dart';
 import 'core/resources/AppStyle.dart';
 import 'firebase_options.dart';
+import 'model/Event.dart';
 import 'ui/splash/screen/splash_screen.dart';
 
 void main() async {
@@ -30,7 +33,7 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ThemeProvider()..initTheme()),
-          ChangeNotifierProvider(create: (_) => UserProvider()), // ✅ إضافة UserProvider
+          ChangeNotifierProvider(create: (_) => UserProvider()),
         ],
         child: const MyApp(),
       ),
@@ -63,7 +66,16 @@ class MyApp extends StatelessWidget {
         RegisterScreen.routeName: (_) => RegisterScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
         CreateEventScreen.routeName: (_) => CreateEventScreen(),
-      },
+        EditEvent.routeName: (_) => EditEvent(Event as Event),
+        EventDetails.routeName: (context) {
+          final event = ModalRoute
+              .of(context)!
+              .settings
+              .arguments as Event;
+          return EventDetails(event);
+
+        },
+      }
     );
   }
 }
